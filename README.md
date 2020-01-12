@@ -22,6 +22,10 @@ python -m venv .env
 ```
 pip install -r requirements.txt
 ```
+6. Start the program
+```
+python strong-moves-extract.py -i "path_to_pgn_file"
+```
 
 ### Linux
 
