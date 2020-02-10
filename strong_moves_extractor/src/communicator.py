@@ -1,8 +1,7 @@
 import socket
 import requests
 from src.endpoints import Endpoint
-
-LOGIN_ENDPOINT = 'user/login'
+from src.extractors.extractor import Extractor
 
 class Communicator:
     """This class is used to communicate with uci-server by sockets."""
@@ -65,3 +64,9 @@ class Communicator:
     def send(self):
         """Send message to the UCI-Server through the socket."""
         pass
+
+    def extract(self, extractor:Extractor):
+        engine_output_data = None #TODO: get output from engine (Stockfish)
+
+        moves = extractor.get_moves(engine_output_data)
+        print('\n---\nThose are some sick moves: \n{}\n---\n'.format(moves))

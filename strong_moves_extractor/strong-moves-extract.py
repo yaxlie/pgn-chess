@@ -1,5 +1,6 @@
 from src.game import Game
 from src.communicator import Communicator
+from src.extractors.example_extractor import ExampleExtractor
 import argparse
 
 parser = argparse.ArgumentParser(description='Analyze non-trivial chess moves.')
@@ -14,5 +15,5 @@ args = parser.parse_args()
 game = Game(args.input_pgn)
 
 communicator = Communicator(args.address, args.port, args.login, args.password)
-communicator.send()
+communicator.extract(ExampleExtractor())
     
