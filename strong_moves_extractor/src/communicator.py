@@ -1,5 +1,8 @@
 import socket
 import requests
+from src.endpoints import Endpoint
+
+LOGIN_ENDPOINT = 'user/login'
 
 class Communicator:
     """This class is used to communicate with uci-server by sockets."""
@@ -26,6 +29,7 @@ class Communicator:
 
     def __del__(self):
         try:
+            requests.get('{}{}'.format(self.uri, Endpoint.logout.value), json=payload)
             self.socket.close()
         except:
             pass #TODO
@@ -35,10 +39,8 @@ class Communicator:
     def __login(self):
         """Log in to the UCI-Server using rest api to generate user's token"""
 
-        endpoint = 'user/login'
-
         payload = {'login': self.login, 'password': self.password}
-        r = requests.post('{}/{}'.format(self.uri, endpoint), json=payload)
+        r = requests.post('{}{}'.format(self.uri, Endpoint.login.value), json=payload)
 
         if r.status_code == 200:
             response = r.json()
@@ -47,7 +49,7 @@ class Communicator:
                 self.token = response['token']
                 print('User logged in!\ttoken:{}'.format(self.token))
         else:
-            raise Exception("Oops! Error on request {}/{}.".format(self.uri, endpoint))
+            raise Exception("Oops! Error on request {}{}.".format(self.uri, Endpoint.login.value))
 
 
     def __connect(self):
