@@ -28,7 +28,7 @@ pip install -r requirements.txt
 ```
 6. Start the program
 ```
-python strong_moves_extractor\strong-moves-extract.py -i "path_to_pgn_file"
+python strong_moves_extractor\strong-moves-extract.py "path_to_pgn_file"
 ```
 
 ### Linux
