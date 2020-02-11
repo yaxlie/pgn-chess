@@ -1,19 +1,19 @@
 import socket
 import requests
+from src.helpers import get_url_groups
 from src.endpoints import Endpoint
 from src.extractors.extractor import Extractor
 
 class Communicator:
     """This class is used to communicate with uci-server by sockets."""
 
-    def __init__(self, address, port, login, password):
-        self.address = address
-        self.port = port
-        self.login = login
-        self.password = password #TODO: Do not keep it in plain text
+    def __init__(self, config):
+        self.url = config.get('url')
+        self.protocol, self.address, self.port = get_url_groups(self.url)
+        self.login = config.get('login')
+        self.password = config.get('password')
 
         self.socket = None
-        self.uri = 'http://{}:{}'.format(self.address, self.port)
         self.token = None
 
         try:
@@ -28,7 +28,7 @@ class Communicator:
 
     def __del__(self):
         try:
-            requests.get('{}{}'.format(self.uri, Endpoint.logout.value), json=payload)
+            requests.get('{}{}'.format(self.url, Endpoint.logout.value), json=payload)
             self.socket.close()
         except:
             pass #TODO
@@ -39,7 +39,7 @@ class Communicator:
         """Log in to the UCI-Server using rest api to generate user's token"""
 
         payload = {'login': self.login, 'password': self.password}
-        r = requests.post('{}{}'.format(self.uri, Endpoint.login.value), json=payload)
+        r = requests.post('{}{}'.format(self.url, Endpoint.login.value), json=payload)
 
         if r.status_code == 200:
             response = r.json()
@@ -48,7 +48,7 @@ class Communicator:
                 self.token = response['token']
                 print('User logged in!\ttoken:{}'.format(self.token))
         else:
-            raise Exception("Oops! Error on request {}{}.".format(self.uri, Endpoint.login.value))
+            raise Exception("Oops! Error on request {}{}.".format(self.url, Endpoint.login.value))
 
 
     def __connect(self):
