@@ -1,8 +1,8 @@
-import socket
 import requests
 from src.helpers import get_url_groups
 from src.endpoints import Endpoint
 from src.extractors.extractor import Extractor
+from src.messengers.messenger import Messenger
 
 class Communicator:
     """This class is used to communicate with uci-server by sockets."""
@@ -14,13 +14,11 @@ class Communicator:
         self.password = config.get('password')
         self.engine = config.get('engine')
 
-        self.socket = None
         self.token = None
 
         try:
             self.__login()
             self.__engine_start()
-            self.__connect()
         except Exception as e:
             print(e)
 
@@ -30,7 +28,6 @@ class Communicator:
     def __exit__(self, type, value, traceback):
         try:
             self.__engine_stop()
-            self.socket.close()
             self.__logout()
 
             print('\n---------\n')
@@ -63,17 +60,6 @@ class Communicator:
             raise Exception("\nOops! Can't log out.")
 
 
-    def __connect(self):
-        """Connect to the sockets (to communicate with UCI-Server)"""
-        try:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.connect((self.address, self.port))
-
-            print("\nSuccessfully connected to the UCI-Server (sockets)!")
-        except Exception as e:
-            raise Exception("\nOops! Can't connect to the UCI-Server (sockets) {}:{}. \n{}".format(self.address, self.port, e))
-    
-
     def __engine_start(self):
         payload = {'engine': self.engine.get('name')}
         headers = {"Authorization": "Bearer {}".format(self.token)}
@@ -102,13 +88,7 @@ class Communicator:
             raise Exception("\nOops! Server has some problems stopping the chess engine.")
 
 
-    def send(self):
-        """Send message to the UCI-Server through the socket."""
-        pass
-
-
-    def extract(self, extractor:Extractor):
-        engine_output_data = None #TODO: get output from engine (Stockfish)
-
+    def extract(self, messenger:Messenger, extractor:Extractor):
+        engine_output_data = messenger.get_engine_data()
         moves = extractor.get_moves(engine_output_data)
         print('\n---\nThose are some sick moves: \n{}\n---'.format(moves))

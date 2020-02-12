@@ -5,3 +5,4 @@ class Endpoint(Enum):
     logout = '/user/logout'
     engine_start = '/engine/start'
     engine_stop = '/engine/stop'
+    sockets = '/ws_engine'

@@ -1,6 +1,7 @@
 from src.game import Game
 from src.communicator import Communicator
-from src.extractors.example_extractor import ExampleExtractor
+from src.extractors.dummy_extractor import DummyExtractor
+from src.messengers.dummy_messenger import DummyMessenger
 import argparse
 import json
 import os
@@ -27,7 +28,9 @@ if os.path.exists(args.config):
         config = json.load(json_file)
 
     with Communicator(config) as communicator:
-        communicator.extract(ExampleExtractor())
+        messenger = DummyMessenger(communicator.token, communicator.address, communicator.port)
+        extractor = DummyExtractor()
+        communicator.extract(messenger, extractor)
 else:
     print("Config file ({}) doesn't exist!".format(args.config))
     exit()
