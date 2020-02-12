@@ -7,6 +7,8 @@ Analyze non-trivial chess moves
 UCI-Server is required.  
 You can get it from http://www.cs.put.poznan.pl/mszelag/Software/software.html
 
+!! You have to download a chess engine e.g. [Stockfish 11](https://stockfishchess.org/)
+
 ### Windows (tested on python 3.7.3)
 
 1. Open console window f.e. Cmder

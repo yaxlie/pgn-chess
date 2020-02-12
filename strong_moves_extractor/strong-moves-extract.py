@@ -26,8 +26,8 @@ if os.path.exists(args.config):
     with open(args.config) as json_file:
         config = json.load(json_file)
 
-    communicator = Communicator(config)
-    communicator.extract(ExampleExtractor())
+    with Communicator(config) as communicator:
+        communicator.extract(ExampleExtractor())
 else:
     print("Config file ({}) doesn't exist!".format(args.config))
     exit()
