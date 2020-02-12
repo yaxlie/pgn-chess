@@ -20,7 +20,7 @@ class Messenger(abc.ABC):
         url = 'ws://{}:{}{}'.format(self.address, str(self.port), Endpoint.sockets.value)
 
         try:
-            print('\nSending message...')
+            print('\nCommunication with UCI Server...')
             async with websockets.connect(url, extra_headers=headers) as websocket:
                 await websocket.send(msg)
                 print(f"\n\t> {msg}")
