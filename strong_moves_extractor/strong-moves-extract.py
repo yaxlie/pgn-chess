@@ -20,7 +20,7 @@ args = parser.parse_args()
 input_pgn_path = args.args[0] if len(args.args) > 0 else None
 output_pgn_path = args.args[1] if len(args.args) > 1 else None
 
-game = Game(input_pgn_path)
+game = Game(input_pgn_path).game
 
 
 if os.path.exists(args.config):
@@ -28,7 +28,7 @@ if os.path.exists(args.config):
         config = json.load(json_file)
 
     with Communicator(config) as communicator:
-        messenger = DummyMessenger(communicator.token, communicator.address, communicator.port)
+        messenger = DummyMessenger(game, args, communicator.token, communicator.address, communicator.port)
         extractor = DummyExtractor()
         communicator.extract(messenger, extractor)
 else:
