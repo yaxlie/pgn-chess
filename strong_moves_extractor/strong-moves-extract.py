@@ -33,8 +33,9 @@ if os.path.exists(args.config):
     board = game.board()
     with Communicator(config) as communicator:
         for move in game.mainline_moves():
-            filter.pass_filters(move, game, board, args, communicator)
-
+            filter.evaluate_position(move, game, board, args, communicator)
+            if filter.pass_filters(move, game, board, args, communicator):
+                saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, args.headers, "tmp")
             board.push(move)
 else:
     print("Config file ({}) doesn't exist!".format(args.config))
