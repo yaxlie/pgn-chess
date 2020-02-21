@@ -1,7 +1,5 @@
 from src.game import Game
 from src.communicator import Communicator
-from src.extractors.dummy_extractor import DummyExtractor
-from src.messengers.dummy_messenger import DummyMessenger
 from src.filter import Filter
 from src.saver import Saver
 import argparse
@@ -35,8 +33,8 @@ if os.path.exists(args.config):
     board = game.board()
     with Communicator(config) as communicator:
         for move in game.mainline_moves():
-            if filter.pass_filters(move, game, board, args, communicator):
-                saver.save()
+            filter.pass_filters(move, game, board, args, communicator)
+
             board.push(move)
 else:
     print("Config file ({}) doesn't exist!".format(args.config))
