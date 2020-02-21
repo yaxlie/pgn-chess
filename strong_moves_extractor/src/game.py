@@ -13,7 +13,7 @@ class Game:
 
     
     def load_game(self, pgn_filepath):
-        pgn = open(pgn_filepath)
+        pgn = open(pgn_filepath, encoding="utf-8-sig")
         self.game = chess.pgn.read_game(pgn)
 
         print('"{}" [{}] - game loaded.'.format(self.game.headers['Event'], self.game.headers['Date']))

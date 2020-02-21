@@ -9,8 +9,9 @@ timeout = 2 # in seconds
 # Primitive version... TODO: Long-lived connection with events
 # https://pypi.org/project/websocket_client/
 class Messenger(abc.ABC):
-    def __init__(self, game:chess.pgn.Game, args, token, address, port):
+    def __init__(self, game:chess.pgn.Game, board, args, token, address, port):
         self.game = game
+        self.board = board
         self.args = args
         self.token = token
         self.address = address

@@ -7,6 +7,6 @@ class DummyExtractor(Extractor):
 
     def get_moves(self, engine_output_data):
         output='\n\t< '
-        print(f'\t< {output.join(engine_output_data)}')
+        # print(f'\t< {output.join(engine_output_data)}')
         example_moves = [engine_output_data[-1]]
         return example_moves

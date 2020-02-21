@@ -27,11 +27,13 @@ if os.path.exists(args.config):
     with open(args.config) as json_file:
         config = json.load(json_file)
 
-    with Communicator(config) as communicator:
-        messenger = DummyMessenger(game, args, communicator.token, communicator.address, communicator.port)
-        extractor = DummyExtractor()
-        communicator.extract(messenger, extractor)
+        board = game.board()
+        for move in game.mainline_moves():
+            with Communicator(config) as communicator:
+                messenger = DummyMessenger(game, board, args, communicator.token, communicator.address, communicator.port)
+                extractor = DummyExtractor()
+                communicator.extract(messenger, extractor)
+            board.push(move)
 else:
     print("Config file ({}) doesn't exist!".format(args.config))
     exit()
-    
