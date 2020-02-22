@@ -23,7 +23,7 @@ output_pgn_path = args.args[1] if len(args.args) > 1 else None
 
 game = Game(input_pgn_path).game
 filter = Filter()
-saver = Saver()
+saver = Saver(output_pgn_path)
 
 
 if os.path.exists(args.config):
@@ -35,7 +35,7 @@ if os.path.exists(args.config):
         for move in game.mainline_moves():
             filter.evaluate_position(move, game, board, args, communicator)
             if filter.pass_filters(move, game, board, args, communicator):
-                saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, "", "tmp")
+                saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, "")
                 print("Writing fen: ", board.fen)
             board.push(move)
 else:
