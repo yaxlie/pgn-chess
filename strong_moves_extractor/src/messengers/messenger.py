@@ -4,7 +4,7 @@ import asyncio
 import chess.pgn
 from src.endpoints import Endpoint
 
-timeout = 2 # in seconds
+timeout = 10 # in seconds
 
 # Primitive version... TODO: Long-lived connection with events
 # https://pypi.org/project/websocket_client/

@@ -40,8 +40,8 @@ class Filter:
         return True
 
     def difference_between_depth_filter(self, args, move, board, communicator, game):
-        depth = 4
-        eps = 150
+        depth = 5
+        eps = 100
 
         board.push(chess.Move.from_uci(self.moves[0]))
         messenger = BestMovesMessenger(game, board, args, communicator.token, communicator.address,
