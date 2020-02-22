@@ -10,8 +10,9 @@ class BestMovesExtractor(Extractor):
         evaluations = []
 
         for i in range(solutions+1, 1, -1):
-            evaluation = engine_output_data[-i].split()[9]
-            move = engine_output_data[-i].split()[19]
+            data = engine_output_data[-i].split()
+            evaluation = data[data.index("cp")+1]
+            move = data[data.index("pv")+1]
             moves.append(move)
             evaluations.append(evaluation)
         return moves, evaluations
