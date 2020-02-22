@@ -40,8 +40,8 @@ class Filter:
         return True
 
     def difference_between_depth_filter(self, args, move, board, communicator, game):
-        depth = 6
-        eps = 100
+        depth = 4
+        eps = 150
 
         board.push(chess.Move.from_uci(self.moves[0]))
         messenger = BestMovesMessenger(game, board, args, communicator.token, communicator.address,
@@ -69,9 +69,106 @@ class Filter:
             return False
         return True
 
+    def get_int_file(self, file):
+        if file == 'a':
+            return 0
+        if file == 'b':
+            return 1
+        if file == 'c':
+            return 2
+        if file == 'd':
+            return 3
+        if file == 'e':
+            return 4
+        if file == 'f':
+            return 5
+        if file == 'g':
+            return 6
+        if file == 'h':
+            return 7
+
+    def simple_gain_or_exchange_filter(self, move, board):
+        if board.is_capture(move):
+            m = board.lan(move)
+            if len(m) == 5:
+                starting_file = self.get_int_file(m[0])
+                starting_rank = int(m[1])-1
+                start_square = chess.square(starting_file, starting_rank)
+
+                ending_file = self.get_int_file(board.lan(move)[3])
+                ending_rank = int(board.lan(move)[4]) - 1
+                end_square = chess.square(ending_file, ending_rank)
+
+            elif len(m) == 6:
+
+                if m[-1] == '+' or m[-1] == '#':
+
+                    starting_file = self.get_int_file(m[0])
+                    starting_rank = int(m[1])-1
+                    start_square = chess.square(starting_file, starting_rank)
+
+                    ending_file = self.get_int_file(board.lan(move)[3])
+                    ending_rank = int(board.lan(move)[4]) - 1
+                    end_square = chess.square(ending_file, ending_rank)
+                else:
+                    starting_file = self.get_int_file(m[1])
+                    starting_rank = int(m[2]) - 1
+                    start_square = chess.square(starting_file, starting_rank)
+
+                    ending_file = self.get_int_file(board.lan(move)[4])
+                    ending_rank = int(board.lan(move)[5]) - 1
+                    end_square = chess.square(ending_file, ending_rank)
+
+            elif len(m) == 7:
+                starting_file = self.get_int_file(m[1])
+                starting_rank = int(m[2]) - 1
+                start_square = chess.square(starting_file, starting_rank)
+
+                ending_file = self.get_int_file(board.lan(move)[4])
+                ending_rank = int(board.lan(move)[5]) - 1
+                end_square = chess.square(ending_file, ending_rank)
+
+            else:
+                raise Exception("LAN length > 7?")
+
+            my_piece = board.piece_at(start_square)
+            enemy_piece = board.piece_at(end_square)
+
+            if self.is_worse_or_equal(my_piece, enemy_piece):
+                return False
+            return True
+        return True
+
     def pass_filters(self, move, game, board, args, communicator):
         if self.min_difference_filter(args):
             if self.simple_capture_filter(move, board):
-                if self.difference_between_depth_filter(args, move, board, communicator, game):
-                    return True
+                if self.simple_gain_or_exchange_filter(move, board):
+                    if self.difference_between_depth_filter(args, move, board, communicator, game):
+                        return True
         return False
+
+    def is_worse_or_equal(self, my_piece, enemy_piece):
+        my_score = 0
+        enemy_score = 0
+
+        if my_piece.piece_type == 1:
+            my_score = 0
+        elif my_piece.piece_type == 2 or my_piece.piece_type == 3:
+            my_score = 1
+        elif my_piece.piece_type == 4:
+            my_score = 2
+        elif my_piece.piece_type == 5:
+            my_score = 3
+
+        if enemy_piece.piece_type == 1:
+            enemy_score = 0
+        elif enemy_piece.piece_type == 2 or enemy_piece.piece_type == 3:
+            enemy_score = 1
+        elif enemy_piece.piece_type == 4:
+            enemy_score = 2
+        elif enemy_piece.piece_type == 5:
+            enemy_score = 3
+
+        if my_score > enemy_score:
+            return False
+        return True
