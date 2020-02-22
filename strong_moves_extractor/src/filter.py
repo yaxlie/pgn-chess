@@ -14,6 +14,12 @@ class Filter:
         self.evaluations = None
         self.played = -1
 
+    def check_played_move(self, move):
+        for i in range(0, len(self.moves)):
+            if chess.Move.from_uci(self.moves[i]) == move:
+                self.played = i
+                break
+
     def evaluate_position(self, move, game, board, args, communicator):
         self.clean()
 
@@ -22,6 +28,8 @@ class Filter:
         extractor = BestMovesExtractor()
         engine_output_data = messenger.get_engine_data(args.variations_number, args.depth)
         self.moves, self.evaluations = extractor.get_moves(engine_output_data, args.variations_number)
+
+        self.check_played_move(move)
 
         print('\n---\nBest move: \n{}\n---'.format(self.moves))
         print('\n---\nEval: \n{}\n---'.format(self.evaluations))
