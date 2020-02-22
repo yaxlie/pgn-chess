@@ -35,7 +35,7 @@ if os.path.exists(args.config):
         for move in game.mainline_moves():
             filter.evaluate_position(move, game, board, args, communicator)
             if filter.pass_filters(move, game, board, args, communicator):
-                saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, args.headers, "tmp")
+                saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, "", "tmp")
                 print("Writing fen: ", board.fen)
             board.push(move)
 else:
