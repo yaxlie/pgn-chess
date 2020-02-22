@@ -8,6 +8,10 @@ class Saver:
         if not os.path.exists(path):
             with open(os.path.join(path), 'w'):
                 pass
+    
+    def new_game(self):
+        with open(self.path, 'a+') as pgn:
+            pgn.write("\n")
 
     def save(self, fen, moves, evaluations, played, headers):
         with open(self.path, 'a+') as pgn:

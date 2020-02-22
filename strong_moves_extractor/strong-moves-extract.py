@@ -39,6 +39,7 @@ if os.path.exists(args.config):
                     saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, "")
                     print("Writing fen: ", board.fen)
                 board.push(move)
+        saver.new_game()   
 else:
     print("Config file ({}) doesn't exist!".format(args.config))
     exit()
