@@ -1,7 +1,7 @@
 
 class Saver:
     def save(self, fen, moves, evaluations, played, headers, filename):
-        with open(filename + '.pgn', 'w+') as pgn:
+        with open(filename + '.pgn', 'a+') as pgn:
             for header in headers:
                 pgn.write(header)
             pgn.write("[FEN \"" + fen + "\"")
@@ -18,4 +18,4 @@ class Saver:
                     next_moves += "{G}"
                 next_moves += "}"
 
-            pgn.write(best_move + " " + next_moves + " *")
+            pgn.write(best_move + " " + next_moves + " *\n")
