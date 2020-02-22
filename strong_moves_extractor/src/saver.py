@@ -1,7 +1,20 @@
+import os
 
 class Saver:
-    def save(self, fen, moves, evaluations, played, headers, filename):
-        with open(filename + '.pgn', 'a+') as pgn:
+
+    def __init__(self, path):
+        self.path = path
+        
+        if not os.path.exists(path):
+            with open(os.path.join(path), 'w'):
+                pass
+    
+    def new_game(self):
+        with open(self.path, 'a+') as pgn:
+            pgn.write("\n")
+
+    def save(self, fen, moves, evaluations, played, headers):
+        with open(self.path, 'a+') as pgn:
             for header in headers:
                 pgn.write(header)
             pgn.write("[FEN \"" + fen + "\"]")

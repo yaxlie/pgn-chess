@@ -21,23 +21,25 @@ args = parser.parse_args()
 input_pgn_path = args.args[0] if len(args.args) > 0 else None
 output_pgn_path = args.args[1] if len(args.args) > 1 else None
 
-game = Game(input_pgn_path).game
+games = Game(input_pgn_path).games
 filter = Filter()
-saver = Saver()
+saver = Saver(output_pgn_path)
 
 
 if os.path.exists(args.config):
     with open(args.config) as json_file:
         config = json.load(json_file)
 
-    board = game.board()
-    with Communicator(config) as communicator:
-        for move in game.mainline_moves():
-            filter.evaluate_position(move, game, board, args, communicator)
-            if filter.pass_filters(move, game, board, args, communicator):
-                saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, "", "tmp")
-                print("Writing fen: ", board.fen)
-            board.push(move)
+    for game in games:
+        board = game.board()
+        with Communicator(config) as communicator:
+            for move in game.mainline_moves():
+                filter.evaluate_position(move, game, board, args, communicator)
+                if filter.pass_filters(move, game, board, args, communicator):
+                    saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, "")
+                    print("Writing fen: ", board.fen)
+                board.push(move)
+        saver.new_game()   
 else:
     print("Config file ({}) doesn't exist!".format(args.config))
     exit()
