@@ -58,8 +58,20 @@ class Filter:
 
         return False
 
+    def simple_capture_filter(self, move, board):
+        if board.is_capture(move):
+            board.push(move)
+            for m in board.legal_moves:
+                if m.uci()[-2:] == move.uci()[-2:]:
+                    board.pop()
+                    return True
+            board.pop()
+            return False
+        return True
+
     def pass_filters(self, move, game, board, args, communicator):
         if self.min_difference_filter(args):
-            if self.difference_between_depth_filter(args, move, board, communicator, game):
-                return True
+            if self.simple_capture_filter(move, board):
+                if self.difference_between_depth_filter(args, move, board, communicator, game):
+                    return True
         return False
