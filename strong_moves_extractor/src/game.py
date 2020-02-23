@@ -21,7 +21,7 @@ class Game:
             pgn_games = games_separator_regex.finditer(raw_pgn)
 
             for pgn in pgn_games:
-                pgn_io = io.StringIO(pgn.string)
+                pgn_io = io.StringIO(pgn.group())
                 self.games.append(chess.pgn.read_game(pgn_io))
 
             print(f'"{len(self.games)}" games loaded.')
