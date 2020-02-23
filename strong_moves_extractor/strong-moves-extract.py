@@ -27,12 +27,12 @@ def get_headers(game, args):
 
 def calculate_time_for_messenger(depth):
     if depth < 21:
-        return 2
+        return 4
     if depth < 26:
-        return 5
+        return 8
     if depth < 32:
-        return 10
-    return 15
+        return 13
+    return 17
 
 
 parser = argparse.ArgumentParser(description='Analyze non-trivial chess moves.')
