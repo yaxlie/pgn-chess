@@ -16,7 +16,7 @@ class Saver:
     def save(self, fen, moves, evaluations, played, headers):
         with open(self.path, 'a+') as pgn:
             for header in headers:
-                pgn.write(header)
+                pgn.write(header + '\n')
             pgn.write("[FEN \"" + fen + "\"]")
             halfmove = fen[-2:]
 

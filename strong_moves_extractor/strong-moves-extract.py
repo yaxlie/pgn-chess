@@ -7,6 +7,24 @@ import json
 import os
 
 
+def get_headers(game, args):
+    headers = []
+
+    if args.headers == "all":
+        for header in game.headers:
+            tmp = game.headers[header]
+            tmp = "[" + header + " " + "\"" + tmp + "\"" + "]"
+            headers.append(tmp)
+    elif args.headers == "concise":
+        selected_headers = ["White", "Black", "Site", "Date"]
+        for header in selected_headers:
+            tmp = game.headers[header]
+            tmp = "[" + header + " " + "\"" + tmp + "\"" + "]"
+            headers.append(tmp)
+
+    return headers
+
+
 parser = argparse.ArgumentParser(description='Analyze non-trivial chess moves.')
 parser.add_argument('-e', '--config', help='path to UCI Server configuration file (relative or absolute)', default="uciServer.json", type=str)
 
@@ -32,11 +50,12 @@ if os.path.exists(args.config):
 
     for game in games:
         board = game.board()
+        headers = get_headers(game, args)
         with Communicator(config) as communicator:
             for move in game.mainline_moves():
                 filter.evaluate_position(move, game, board, args, communicator)
                 if filter.pass_filters(move, game, board, args, communicator):
-                    saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, "")
+                    saver.save(board.fen(), filter.moves, filter.evaluations, filter.played, headers)
                     print("Writing fen: ", board.fen)
                 board.push(move)
         saver.new_game()   
