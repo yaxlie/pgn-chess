@@ -27,7 +27,7 @@ class Filter:
                                        communicator.port, time)
         extractor = BestMovesExtractor()
         engine_output_data = messenger.get_engine_data(args.variations_number, args.depth)
-        self.moves, self.evaluations = extractor.get_moves(engine_output_data, args.variations_number)
+        self.moves, self.evaluations = extractor.get_moves(engine_output_data, args.variations_number, move)
 
         self.check_played_move(move)
 
@@ -48,7 +48,7 @@ class Filter:
                                        communicator.port, time)
         extractor = BestMovesExtractor()
         engine_output_data = messenger.get_engine_data(1, depth)
-        m, e = extractor.get_moves(engine_output_data, 1)
+        m, e = extractor.get_moves(engine_output_data, 1, move)
         print(m[0], " ", e[0])
 
         board.pop()

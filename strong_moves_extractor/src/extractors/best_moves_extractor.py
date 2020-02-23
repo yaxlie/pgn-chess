@@ -5,7 +5,7 @@ class BestMovesExtractor(Extractor):
     def __init__(self):
         pass
 
-    def get_moves(self, engine_output_data, solutions):
+    def get_moves(self, engine_output_data, solutions, played_move):
         moves = []
         evaluations = []
 
@@ -15,7 +15,10 @@ class BestMovesExtractor(Extractor):
                 evaluation = data[data.index("cp")+1]
             else:
                 evaluation = 10000
-            move = data[data.index("pv")+1]
+            if 'pv' in data:
+                move = data[data.index("pv")+1]
+            else:
+                move = played_move.uci()
             moves.append(move)
             evaluations.append(evaluation)
         return moves, evaluations

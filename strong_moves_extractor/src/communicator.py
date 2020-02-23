@@ -87,8 +87,8 @@ class Communicator:
         else:
             raise Exception("\nOops! Server has some problems stopping the chess engine.")
 
-
     def extract(self, messenger:Messenger, extractor:Extractor):
-        engine_output_data = messenger.get_engine_data()
-        moves = extractor.get_moves(engine_output_data)
-        print('\n---\nThose are some sick moves: \n{}\n---'.format(moves))
+        pass
+        # engine_output_data = messenger.get_engine_data()
+        # moves = extractor.get_moves(engine_output_data)
+        # print('\n---\nThose are some sick moves: \n{}\n---'.format(moves))
