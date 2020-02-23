@@ -20,18 +20,18 @@ class Filter:
                 self.played = i
                 break
 
-    def evaluate_position(self, move, game, board, args, communicator):
+    def evaluate_position(self, move, game, board, args, communicator, time):
         self.clean()
 
         messenger = BestMovesMessenger(game, board, args, communicator.token, communicator.address,
-                                       communicator.port)
+                                       communicator.port, time)
         extractor = BestMovesExtractor()
         engine_output_data = messenger.get_engine_data(args.variations_number, args.depth)
         self.moves, self.evaluations = extractor.get_moves(engine_output_data, args.variations_number)
 
         self.check_played_move(move)
 
-        print('\n---\nBest move: \n{}\n---'.format(self.moves))
+        print('\n---\nBest moves: \n{}\n---'.format(self.moves))
         print('\n---\nEval: \n{}\n---'.format(self.evaluations))
 
     def min_difference_filter(self, args):
@@ -39,13 +39,13 @@ class Filter:
             return False
         return True
 
-    def difference_between_depth_filter(self, args, move, board, communicator, game):
+    def difference_between_depth_filter(self, args, move, board, communicator, game, time):
         depth = 5
         eps = 100
 
         board.push(chess.Move.from_uci(self.moves[0]))
         messenger = BestMovesMessenger(game, board, args, communicator.token, communicator.address,
-                                       communicator.port)
+                                       communicator.port, time)
         extractor = BestMovesExtractor()
         engine_output_data = messenger.get_engine_data(1, depth)
         m, e = extractor.get_moves(engine_output_data, 1)
@@ -139,11 +139,11 @@ class Filter:
             return True
         return True
 
-    def pass_filters(self, move, game, board, args, communicator):
+    def pass_filters(self, move, game, board, args, communicator, time):
         if self.min_difference_filter(args):
             if self.simple_capture_filter(move, board):
                 if self.simple_gain_or_exchange_filter(move, board):
-                    if self.difference_between_depth_filter(args, move, board, communicator, game):
+                    if self.difference_between_depth_filter(args, move, board, communicator, game, time):
                         return True
         return False
 

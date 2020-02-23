@@ -4,18 +4,19 @@ import asyncio
 import chess.pgn
 from src.endpoints import Endpoint
 
-timeout = 10 # in seconds
+# timeout = 10 # in seconds
 
 # Primitive version... TODO: Long-lived connection with events
 # https://pypi.org/project/websocket_client/
 class Messenger(abc.ABC):
-    def __init__(self, game:chess.pgn.Game, board, args, token, address, port):
+    def __init__(self, game:chess.pgn.Game, board, args, token, address, port, time):
         self.game = game
         self.board = board
         self.args = args
         self.token = token
         self.address = address
         self.port = port
+        self.timeout = time
 
     async def send(self, msg):
         """Send a message through websockets and wait for the response."""
@@ -34,7 +35,7 @@ class Messenger(abc.ABC):
                 # TODO: Long-lived connection with events
                 while True:
                     try:
-                        r = await asyncio.wait_for(websocket.recv(), timeout=timeout)
+                        r = await asyncio.wait_for(websocket.recv(), timeout=self.timeout)
                         if len(r) == 0:
                             break
                         else:
