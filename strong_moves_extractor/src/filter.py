@@ -151,6 +151,10 @@ class Filter:
         my_score = 0
         enemy_score = 0
 
+        # en passant
+        if enemy_piece == None:
+            return True
+
         if my_piece.piece_type == 1:
             my_score = 0
         elif my_piece.piece_type == 2 or my_piece.piece_type == 3:
