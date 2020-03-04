@@ -14,7 +14,7 @@ class BestMovesExtractor(Extractor):
             if "cp" in data:
                 evaluation = data[data.index("cp")+1]
             else:
-                evaluation = 10000
+                evaluation = "10000"
             if 'pv' in data:
                 move = data[data.index("pv")+1]
             else:
